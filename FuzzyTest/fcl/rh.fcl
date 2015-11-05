@@ -1,0 +1,44 @@
+FUNCTION_BLOCK rh
+
+VAR_INPUT
+	capacitacao : REAL;
+	experiencia : REAL;
+END_VAR
+
+VAR_OUTPUT
+	gratificacao : REAL;
+END_VAR
+
+FUZZIFY capacitacao
+	TERM fraca :=  GAUSS 0 2;
+	TERM media :=  GAUSS 7.5 2;
+	TERM forte :=  GAUSS 15 2;
+END_FUZZIFY
+
+FUZZIFY experiencia
+	TERM pouca := GAUSS 0 4;
+	TERM media := GAUSS 15 4;
+	TERM muita := GAUSS 30 4;
+END_FUZZIFY
+
+DEFUZZIFY gratificacao
+	TERM muitobaixa := GAUSS 0 50;
+	TERM baixa := GAUSS 250 50;
+	TERM media :=  GAUSS 500 50;
+	TERM alta := GAUSS 750 50;
+	TERM muitoalta := GAUSS 1000 50;
+END_DEFUZZIFY
+
+RULEBLOCK No1
+	RULE 1 : IF (capacitacao IS fraca) AND (experiencia IS pouca) THEN gratificacao IS muitobaixa;
+	RULE 2 : IF (capacitacao IS fraca) AND (experiencia IS media) THEN gratificacao IS baixa;
+	RULE 3 : IF (capacitacao IS fraca) AND (experiencia IS muita) THEN gratificacao IS media;
+	RULE 4 : IF (capacitacao IS media) AND (experiencia IS pouca) THEN gratificacao IS baixa;
+	RULE 5 : IF (capacitacao IS media) AND (experiencia IS media) THEN gratificacao IS media;
+	RULE 6 : IF (capacitacao IS media) AND (experiencia IS muita) THEN gratificacao IS alta;
+	RULE 7 : IF (capacitacao IS forte) AND (experiencia IS pouca) THEN gratificacao IS media;
+	RULE 8 : IF (capacitacao IS forte) AND (experiencia IS media) THEN gratificacao IS alta;
+	RULE 9 : IF (capacitacao IS forte) AND (experiencia IS muita) THEN gratificacao IS muitoalta;
+END_RULEBLOCK
+
+END_FUNCTION_BLOCK

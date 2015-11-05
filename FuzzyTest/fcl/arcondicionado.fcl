@@ -1,0 +1,30 @@
+FUNCTION_BLOCK arcondicionado
+
+VAR_INPUT
+	temperatura : REAL;
+END_VAR
+
+VAR_OUTPUT
+	potencia : REAL;
+END_VAR
+
+FUZZIFY temperatura
+	TERM frio := SIGM  -1 7.0;
+	TERM poucofrio := GAUSS  18.0 4;
+	TERM quente := SIGM 1 30.0;
+END_FUZZIFY
+
+DEFUZZIFY potencia
+	TERM baixa := (0,1) (7.5,0);
+	TERM media := TRIAN 5 10 15;
+	TERM alta := (12.5,0) (20,1);
+	RANGE := (0 .. 20);
+END_DEFUZZIFY
+
+RULEBLOCK regras
+	RULE 1 : IF temperatura IS frio THEN potencia IS baixa;
+	RULE 2 : IF temperatura IS poucofrio THEN potencia IS media;
+	RULE 3 : IF temperatura IS quente THEN potencia IS alta;
+END_RULEBLOCK
+
+END_FUNCTION_BLOCK
