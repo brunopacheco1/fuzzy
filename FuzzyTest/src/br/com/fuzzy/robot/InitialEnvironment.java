@@ -29,11 +29,16 @@ public class InitialEnvironment extends EnvironmentDescription {
 		Robot robot3 = new Robot(new Vector3d(-7, 0, 2), "robot 3");
 		
 		Robot robot4 = new Robot(new Vector3d(7, 0, 0), "robot 4");
-		robot4.rotateY(90);
 		Robot robot5 = new Robot(new Vector3d(7, 0, -2), "robot 5");
-		robot5.rotateY(90);
 		Robot robot6 = new Robot(new Vector3d(7, 0, 2), "robot 6");
-		robot6.rotateY(90);
+		
+		Robot robot7 = new Robot(new Vector3d(5, 0, 0), "robot 7");
+		Robot robot8 = new Robot(new Vector3d(5, 0, -2), "robot 8");
+		Robot robot9 = new Robot(new Vector3d(5, 0, 2), "robot 9");
+		
+		Robot robot10 = new Robot(new Vector3d(-5, 0, 0), "robot 10");
+		Robot robot11 = new Robot(new Vector3d(-5, 0, -2), "robot 11");
+		Robot robot12 = new Robot(new Vector3d(-5, 0, 2), "robot 12");
 		
 		add(robot1);
 		add(robot2);
@@ -41,5 +46,11 @@ public class InitialEnvironment extends EnvironmentDescription {
 		add(robot4);
 		add(robot5);
 		add(robot6);
+		add(robot7);
+		add(robot8);
+		add(robot9);
+		add(robot10);
+		add(robot11);
+		add(robot12);
 	}
 }

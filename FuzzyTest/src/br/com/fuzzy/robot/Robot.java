@@ -57,20 +57,7 @@ public class Robot extends Agent {
 		lamp.setBlink(lampada.intValue() > 2 && lampada.intValue() < 4);
 		lamp.setOn(lampada.intValue() > 4);
 		
-		
-		
 		BigDecimal giro = new BigDecimal(fis.getVariable("giro").getValue()).setScale(0, RoundingMode.UP);
-
-		Double giroSpeed = 0d;
-		if(giro.intValue() > 100) {
-			giroSpeed = 3.14159265d;
-		} else if(giro.intValue() < -100) {
-			giroSpeed = -3.14159265d;
-		}
-		
-		setRotationalVelocity(giroSpeed);
-		if(getCounter() % 20 == 0 && !this.collisionDetected()) {
-			System.out.println("{\n\t\"sensor_frente\": " + distanciaSensorFrente + ";\n\t\"motor\": " + motor + ";\n\t\"lampada\": " + lampada + ";\n\t\"giro\": " + giro + "\n}");
-		}
+		setRotationalVelocity(giro.doubleValue() * 0.0174533);
 	}
 }
