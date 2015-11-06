@@ -1,4 +1,4 @@
-package main;
+package br.com.fuzzy.tests;
 
 import net.sourceforge.jFuzzyLogic.FIS;
 import net.sourceforge.jFuzzyLogic.plot.JDialogFis;

@@ -1,4 +1,4 @@
-package main;
+package br.com.fuzzy.tests;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -21,19 +21,18 @@ public class Robo {
 		
 		JDialogFis jdf = new JDialogFis(fis);
 		
-		BigDecimal distancia = BigDecimal.ONE;
+		BigDecimal distancia = new BigDecimal("2.0");
 		while(true) {
-			fis.setVariable("distancia", distancia.doubleValue());
+			fis.setVariable("sensor_frente", distancia.doubleValue());
 			fis.evaluate();
 			
-			BigDecimal motor_esquerdo = new BigDecimal(fis.getVariable("motor_esquerdo").getValue()).setScale(2, RoundingMode.DOWN);
-			BigDecimal motor_direito = new BigDecimal(fis.getVariable("motor_direito").getValue()).setScale(2, RoundingMode.DOWN);
+			BigDecimal motor = new BigDecimal(fis.getVariable("motor").getValue()).setScale(2, RoundingMode.DOWN);
 			
 			jdf.repaint();
 			
 			Thread.sleep(1000);
 			 
-			if(motor_esquerdo.doubleValue() == 0d && motor_direito.doubleValue() == 0d) {
+			if(motor.doubleValue() == 0d) {
 				break;
 			}
 			
