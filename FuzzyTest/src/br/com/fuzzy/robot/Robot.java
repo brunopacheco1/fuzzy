@@ -7,7 +7,6 @@ import javax.vecmath.Vector3d;
 
 import net.sourceforge.jFuzzyLogic.FIS;
 import simbad.sim.Agent;
-import simbad.sim.CameraSensor;
 import simbad.sim.LampActuator;
 import simbad.sim.RangeSensorBelt;
 import simbad.sim.RobotFactory;
@@ -15,7 +14,6 @@ import simbad.sim.RobotFactory;
 public class Robot extends Agent {
 
 	private RangeSensorBelt sonars;
-	private CameraSensor camera;
 	private LampActuator lamp;
 	
 	private FIS fis;
@@ -23,8 +21,6 @@ public class Robot extends Agent {
 	public Robot(Vector3d position, String name) {
 		super(position, name);
 		
-		camera = RobotFactory.addCameraSensor(this);
- 		
 		sonars = RobotFactory.addSonarBeltSensor(this, 5);
  		
  		lamp = RobotFactory.addLamp(this);
