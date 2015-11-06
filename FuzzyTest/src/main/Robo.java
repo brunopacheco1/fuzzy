@@ -1,5 +1,8 @@
 package main;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 import net.sourceforge.jFuzzyLogic.FIS;
 import net.sourceforge.jFuzzyLogic.plot.JDialogFis;
 
@@ -7,7 +10,7 @@ public class Robo {
 
 	public static void main(String[] args) throws Exception {
 		// Load from 'FCL' file
-		String fileName = "fcl/arcondicionado.fcl";
+		String fileName = "fcl/robo_fuzzy.fcl";
 		FIS fis = FIS.load(fileName, false);
 
 		// Error while loading?
@@ -16,34 +19,25 @@ public class Robo {
 			return;
 		}
 		
-		JDialogFis jdf = new JDialogFis(fis, 800, 600);
-
-		int i = -2;
-		boolean reverse = false;
+		JDialogFis jdf = new JDialogFis(fis);
+		
+		BigDecimal distancia = BigDecimal.ONE;
 		while(true) {
-			// Set inputs and evaluate
-			fis.setVariable("temperatura", i);
+			fis.setVariable("distancia", distancia.doubleValue());
 			fis.evaluate();
 			
-//			Variable potencia = fis.getVariable("potencia");
-//			System.out.println(potencia.getValue());
+			BigDecimal motor_esquerdo = new BigDecimal(fis.getVariable("motor_esquerdo").getValue()).setScale(2, RoundingMode.DOWN);
+			BigDecimal motor_direito = new BigDecimal(fis.getVariable("motor_direito").getValue()).setScale(2, RoundingMode.DOWN);
 			
 			jdf.repaint();
-
-			Thread.sleep(300);
 			
-			if(reverse) {
-				i--;
-			} else {
-				i++;
+			Thread.sleep(1000);
+			 
+			if(motor_esquerdo.doubleValue() == 0d && motor_direito.doubleValue() == 0d) {
+				break;
 			}
 			
-			if(i == 39) {
-				reverse = true;
-			} else if(i == -2) {
-				reverse = false;
-			}
+			distancia = distancia.subtract(new BigDecimal("0.1"));
 		}
-		
 	}
 }

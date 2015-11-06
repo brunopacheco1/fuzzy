@@ -16,7 +16,7 @@ public class ArCondicinoado {
 			return;
 		}
 		
-		JDialogFis jdf = new JDialogFis(fis, 800, 600);
+		JDialogFis jdf = new JDialogFis(fis);
 
 		int i = -2;
 		boolean reverse = false;
@@ -30,7 +30,7 @@ public class ArCondicinoado {
 			
 			jdf.repaint();
 
-			Thread.sleep(300);
+			Thread.sleep(100);
 			
 			if(reverse) {
 				i--;
