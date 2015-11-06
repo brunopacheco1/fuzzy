@@ -6,13 +6,13 @@ VAR_INPUT
 	sensor_frente : REAL;
 	sensor_frente_direito : REAL;
 	sensor_lateral_direito : REAL;
-	angulo : REAL;
 	distancia : REAL;
 END_VAR
 
 VAR_OUTPUT
-	motor_esquerdo : REAL;
-	motor_direito : REAL;
+	angulo : REAL;
+	motor : REAL;
+	lampada : REAL;
 END_VAR
 
 FUZZIFY sensor_lateral_esquerdo
@@ -50,14 +50,6 @@ FUZZIFY sensor_lateral_direito
 	TERM muito_longe := (1.2,0) (1.5,1) (2,1);
 END_FUZZIFY
 
-FUZZIFY angulo
-	TERM negativo_grande := TRIAN -180 -120 -70;
-	TERM negativo_medio := TRIAN -120 -50 0;
-	TERM zero := TRIAN -5 0 5;
-	TERM positivo_medio := TRIAN 0 50 120;
-	TERM positivo_grande := TRIAN 70 120 180;
-END_FUZZIFY
-
 FUZZIFY distancia
 	TERM muito_perto := (0,1) (0.2,1) (0.35,0);
 	TERM perto := TRIAN 0.25 0.35 0.5;
@@ -65,19 +57,28 @@ FUZZIFY distancia
 	TERM muito_longe := (0.7,0) (0.85,1) (1,1);
 END_FUZZIFY
 
-DEFUZZIFY motor_esquerdo
-	TERM negativo_alto := (-1,1) (-0.85,1) (-0.45,0);
-	TERM negativo_medio := TRIAN -0.6 -0.45 -0.1;
-	TERM zero := TRIAN -0.2 0 0.2;
-	TERM positivo_medio := TRIAN 0.1 0.45 0.6;
-	TERM positivo_alto := (0.45,0) (0.85,1) (1,1);
-	RANGE := (-1 .. 1);
+DEFUZZIFY lampada
+	TERM piscar := (0,1) (0.4,0);
+	TERM nao_piscar := (0.6,0) (1,1);
+	RANGE := (0 .. 1);
 	
 	METHOD : COG;
 	DEFAULT := 0;
 END_DEFUZZIFY
 
-DEFUZZIFY motor_direito
+DEFUZZIFY angulo
+	TERM negativo_grande := TRIAN -180 -120 -70;
+	TERM negativo_medio := TRIAN -120 -50 0;
+	TERM zero := TRIAN -5 0 5;
+	TERM positivo_medio := TRIAN 0 50 120;
+	TERM positivo_grande := TRIAN 70 120 180;
+	RANGE := (-180 .. 180);
+	
+	METHOD : COG;
+	DEFAULT := 0;
+END_DEFUZZIFY
+
+DEFUZZIFY motor
 	TERM negativo_alto := (-1,1) (-0.85,1) (-0.45,0);
 	TERM negativo_medio := TRIAN -0.6 -0.45 -0.1;
 	TERM zero := TRIAN -0.2 0 0.2;
@@ -90,10 +91,12 @@ DEFUZZIFY motor_direito
 END_DEFUZZIFY
 
 RULEBLOCK regras
-	RULE 1 : IF distancia IS muito_perto THEN motor_esquerdo IS zero, motor_direito IS zero;
-	RULE 2 : IF distancia IS perto THEN motor_esquerdo IS positivo_medio, motor_direito IS positivo_medio;
-	RULE 3 : IF distancia IS longe THEN motor_esquerdo IS positivo_alto, motor_direito IS positivo_alto;
-	RULE 4 : IF distancia IS muito_longe THEN motor_esquerdo IS positivo_alto, motor_direito IS positivo_alto;
+	RULE 1 : IF sensor_frente IS muito_perto THEN motor IS zero;
+	RULE 2 : IF sensor_frente IS perto THEN motor IS positivo_medio;
+	RULE 3 : IF sensor_frente IS longe THEN motor IS positivo_alto;
+	RULE 4 : IF sensor_frente IS muito_longe THEN motor IS positivo_alto;
+	RULE 5 : IF (sensor_lateral_esquerdo IS muito_perto) OR (sensor_frente_esquerdo IS muito_perto) OR (sensor_frente IS muito_perto) OR (sensor_frente_direito IS muito_perto) OR (sensor_lateral_direito IS muito_perto) THEN lampada IS piscar;
+	RULE 6 : IF (sensor_lateral_esquerdo IS NOT muito_perto) AND (sensor_frente_esquerdo IS NOT muito_perto) AND (sensor_frente IS NOT muito_perto) AND (sensor_frente_direito IS NOT muito_perto) AND (sensor_lateral_direito IS NOT muito_perto) THEN lampada IS nao_piscar;
 END_RULEBLOCK
 
 END_FUNCTION_BLOCK
