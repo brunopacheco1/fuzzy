@@ -1,0 +1,78 @@
+FUNCTION_BLOCK robo_fuzzy
+
+VAR_INPUT
+	sensor_esquerdo : REAL;
+	sensor_frente : REAL;
+	sensor_direito : REAL;
+	distancia : REAL;
+END_VAR
+
+VAR_OUTPUT
+	giro : REAL;
+	motor : REAL;
+	lampada : REAL;
+END_VAR
+
+FUZZIFY sensor_esquerdo
+	TERM muito_perto := (0,1) (0.3,1) (0.7,0);
+	TERM perto := TRIAN 0.6 1 1.2;
+	TERM longe := (1.1,0) (1.6,1) (2,1);
+END_FUZZIFY
+
+FUZZIFY sensor_frente
+	TERM muito_perto := (0,1) (0.3,1) (0.7,0);
+	TERM perto := TRIAN 0.6 1 1.2;
+	TERM longe := (1.1,0) (1.6,1) (2,1);
+END_FUZZIFY
+
+FUZZIFY sensor_direito
+	TERM muito_perto := (0,1) (0.3,1) (0.7,0);
+	TERM perto := TRIAN 0.6 1 1.2;
+	TERM longe := (1.1,0) (1.6,1) (2,1);
+END_FUZZIFY
+
+FUZZIFY distancia
+	TERM muito_perto := (0,1) (0.2,1) (0.35,0);
+	TERM perto := TRIAN 0.25 0.35 0.5;
+	TERM longe := TRIAN 0.45 0.6 0.75;
+	TERM muito_longe := (0.7,0) (0.85,1) (1,1);
+END_FUZZIFY
+
+DEFUZZIFY lampada
+	TERM desligar := TRIAN 0 1 2;
+	TERM piscar := TRIAN 2 3 4;
+	RANGE := (0 .. 4);
+	
+	METHOD : COG;
+	DEFAULT := 0;
+END_DEFUZZIFY
+
+DEFUZZIFY giro
+	TERM negativo := TRIAN -230 -180 -120;
+	TERM zero := TRIAN -5 0 5;
+	TERM positivo := TRIAN 120 180 230;
+	RANGE := (-230 .. 230);
+	
+	METHOD : COG;
+	DEFAULT := 0;
+END_DEFUZZIFY
+
+DEFUZZIFY motor
+	TERM negativo_alto := (-1,1) (-0.85,1) (-0.45,0);
+	TERM negativo_medio := TRIAN -0.6 -0.45 -0.1;
+	TERM zero := TRIAN -0.2 0 0.2;
+	TERM positivo_medio := TRIAN 0.1 0.45 0.6;
+	TERM positivo_alto := (0.45,0) (0.85,1) (1,1);
+	RANGE := (-1 .. 1);
+	
+	METHOD : COG;
+	DEFAULT := 0;
+END_DEFUZZIFY
+
+RULEBLOCK regras
+	RULE 1 : IF (sensor_frente IS muito_perto) OR (sensor_esquerdo IS muito_perto) OR (sensor_direito IS muito_perto) THEN motor IS zero, lampada IS piscar, giro IS positivo;
+	RULE 2 : IF sensor_frente IS perto THEN motor IS positivo_medio, lampada IS desligar;
+	RULE 3 : IF sensor_frente IS longe THEN motor IS positivo_alto, lampada IS desligar;
+END_RULEBLOCK
+
+END_FUNCTION_BLOCK
