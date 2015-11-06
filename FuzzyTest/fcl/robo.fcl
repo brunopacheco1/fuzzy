@@ -4,7 +4,6 @@ VAR_INPUT
 	sensor_esquerdo : REAL;
 	sensor_frente : REAL;
 	sensor_direito : REAL;
-	distancia : REAL;
 END_VAR
 
 VAR_OUTPUT
@@ -31,13 +30,6 @@ FUZZIFY sensor_direito
 	TERM longe := (1.1,0) (1.6,1) (2,1);
 END_FUZZIFY
 
-FUZZIFY distancia
-	TERM muito_perto := (0,1) (0.2,1) (0.35,0);
-	TERM perto := TRIAN 0.25 0.35 0.5;
-	TERM longe := TRIAN 0.45 0.6 0.75;
-	TERM muito_longe := (0.7,0) (0.85,1) (1,1);
-END_FUZZIFY
-
 DEFUZZIFY lampada
 	TERM desligar := TRIAN 0 1 2;
 	TERM piscar := TRIAN 2 3 4;
@@ -58,8 +50,6 @@ DEFUZZIFY giro
 END_DEFUZZIFY
 
 DEFUZZIFY motor
-	TERM negativo_alto := (-1,1) (-0.85,1) (-0.45,0);
-	TERM negativo_medio := TRIAN -0.6 -0.45 -0.1;
 	TERM zero := TRIAN -0.2 0 0.2;
 	TERM positivo_medio := TRIAN 0.1 0.45 0.6;
 	TERM positivo_alto := (0.45,0) (0.85,1) (1,1);
