@@ -10,7 +10,7 @@ public class Robo {
 
 	public static void main(String[] args) throws Exception {
 		// Load from 'FCL' file
-		String fileName = "fcl/robo_fuzzy.fcl";
+		String fileName = "fcl/robo.fcl";
 		FIS fis = FIS.load(fileName, false);
 
 		// Error while loading?

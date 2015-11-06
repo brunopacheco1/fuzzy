@@ -21,7 +21,7 @@ public class Robot extends Agent {
 	public Robot(Vector3d position, String name) {
 		super(position, name);
 		
-		sonars = RobotFactory.addSonarBeltSensor(this, 5);
+		sonars = RobotFactory.addSonarBeltSensor(this, 3);
  		
  		lamp = RobotFactory.addLamp(this);
  		lamp.setBlink(false);
@@ -31,7 +31,7 @@ public class Robot extends Agent {
 	}
 
 	private void lerFuzzyScript() {
-		String fileName = "fcl/robo_fuzzy.fcl";
+		String fileName = "fcl/robo.fcl";
 		fis = FIS.load(fileName, false);
 	}
 
@@ -40,37 +40,37 @@ public class Robot extends Agent {
 	}
 
 	public void performBehavior() {
-		Double distanciaSensorFrente = sonars.getFrontQuadrantMeasurement();
-		Double distanciaSensorFrenteDireito = sonars.getFrontRightQuadrantMeasurement();
-		Double distanciaSensorLateralDireito = sonars.getRightQuadrantMeasurement();
-		Double distanciaSensorLateralEsquerdo = sonars.getLeftQuadrantMeasurement();
-		Double distanciaSensorFrenteEsquerdo = sonars.getFrontLeftQuadrantMeasurement();
+		Double distanciaSensorFrente = sonars.getMeasurement(0);
+		Double distanciaSensorLateralDireito = sonars.getMeasurement(1);
+		Double distanciaSensorLateralEsquerdo = sonars.getMeasurement(2);
 		
-		fis.setVariable("sensor_lateral_esquerdo", distanciaSensorLateralEsquerdo.doubleValue());
-		fis.setVariable("sensor_frente_esquerdo", distanciaSensorFrenteEsquerdo.doubleValue());
+		fis.setVariable("sensor_esquerdo", distanciaSensorLateralEsquerdo.doubleValue());
 		fis.setVariable("sensor_frente", distanciaSensorFrente.doubleValue());
-		fis.setVariable("sensor_frente_direito", distanciaSensorFrenteDireito.doubleValue());
-		fis.setVariable("sensor_lateral_direito", distanciaSensorLateralDireito.doubleValue());
+		fis.setVariable("sensor_direito", distanciaSensorLateralDireito.doubleValue());
 		
 		fis.evaluate();
 		
 		BigDecimal motor = new BigDecimal(fis.getVariable("motor").getValue()).setScale(2, RoundingMode.DOWN);
-		setTranslationalVelocity(motor.doubleValue() * 2);
+		setTranslationalVelocity(motor.doubleValue());
 		
-		BigDecimal lampada = new BigDecimal(fis.getVariable("lampada").getValue()).setScale(1, RoundingMode.HALF_EVEN).setScale(0, RoundingMode.HALF_DOWN);
-		lamp.setBlink(lampada.intValue() == 0);
+		BigDecimal lampada = new BigDecimal(fis.getVariable("lampada").getValue()).setScale(0, RoundingMode.UP);
+		lamp.setBlink(lampada.intValue() > 2 && lampada.intValue() < 4);
+		lamp.setOn(lampada.intValue() > 4);
 		
-		if(getName().equals("robot 2") && getCounter() % 20 == 0 && !this.collisionDetected()) {
-//			// print each sonars measurement
-//			System.out.println("-----------------SONARS-----------------");
-//			for (int i = 0; i < sonars.getNumSensors(); i++) {
-//				double range = sonars.getMeasurement(i);
-//				double angle = sonars.getSensorAngle(i);
-//				boolean hit = sonars.hasHit(i);
-//				
-//				System.out.println("SONAR[" + i + "]: at angle = " + angle + "; measured range = " + range + "; has hit something: " + hit);
-//			}
-//			System.out.println("-----------------FIM-----------------");
+		
+		
+		BigDecimal giro = new BigDecimal(fis.getVariable("giro").getValue()).setScale(0, RoundingMode.UP);
+
+		Double giroSpeed = 0d;
+		if(giro.intValue() > 100) {
+			giroSpeed = 3.14159265d;
+		} else if(giro.intValue() < -100) {
+			giroSpeed = -3.14159265d;
+		}
+		
+		setRotationalVelocity(giroSpeed);
+		if(getCounter() % 20 == 0 && !this.collisionDetected()) {
+			System.out.println("{\n\t\"sensor_frente\": " + distanciaSensorFrente + ";\n\t\"motor\": " + motor + ";\n\t\"lampada\": " + lampada + ";\n\t\"giro\": " + giro + "\n}");
 		}
 	}
 }

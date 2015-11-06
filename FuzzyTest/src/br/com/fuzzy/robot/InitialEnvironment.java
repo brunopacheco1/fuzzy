@@ -1,8 +1,5 @@
 package br.com.fuzzy.robot;
 
-import java.awt.Color;
-
-import javax.vecmath.Color3f;
 import javax.vecmath.Vector3d;
 
 import simbad.sim.EnvironmentDescription;
@@ -16,26 +13,33 @@ public class InitialEnvironment extends EnvironmentDescription {
 		light1IsOn = true;
 		light2IsOn = false;
 
-		Wall wall1 = new Wall(new Vector3d(25, 0, 0), 10 /*length*/, 2/*height*/, this);
-		wall1.rotate90(1);
-		wall1.setColor(new Color3f(Color.ORANGE));
-		add(wall1);
+		Wall localWall1 = new Wall(new Vector3d(9.0D, 0.0D, 0.0D), 19.0F, 1.0F, this);
+	    localWall1.rotate90(1);
+	    add(localWall1);
+	    Wall localWall2 = new Wall(new Vector3d(-9.0D, 0.0D, 0.0D), 19.0F, 2.0F, this);
+	    localWall2.rotate90(1);
+	    add(localWall2);
+	    Wall localWall3 = new Wall(new Vector3d(0.0D, 0.0D, 9.0D), 19.0F, 1.0F, this);
+	    add(localWall3);
+	    Wall localWall4 = new Wall(new Vector3d(0.0D, 0.0D, -9.0D), 19.0F, 2.0F, this);
+	    add(localWall4);
 
-		Wall wall2 = new Wall(new Vector3d(-25, 0, 0), 10, 2, this);
-		wall2.rotate90(1);
-		wall2.setColor(new Color3f(Color.MAGENTA));
-		add(wall2);
-
-		Wall wall3 = new Wall(new Vector3d(0, 0, 5), 50, 2, this);
-		wall3.setColor(new Color3f(Color.DARK_GRAY));
-		add(wall3);
-
-		Wall wall4 = new Wall(new Vector3d(0, 0, -5), 50, 2, this);
-		wall4.setColor(new Color3f(Color.GREEN));
-		add(wall4);
-
-		add(new Robot(new Vector3d(-20, 0, 0), "robot 1"));
-		add(new Robot(new Vector3d(-20, 0, -2), "robot 2"));
-		add(new Robot(new Vector3d(-20, 0, 2), "robot 3"));
+		Robot robot1 = new Robot(new Vector3d(-7, 0, 0), "robot 1");
+		Robot robot2 = new Robot(new Vector3d(-7, 0, -2), "robot 2");
+		Robot robot3 = new Robot(new Vector3d(-7, 0, 2), "robot 3");
+		
+		Robot robot4 = new Robot(new Vector3d(7, 0, 0), "robot 4");
+		robot4.rotateY(90);
+		Robot robot5 = new Robot(new Vector3d(7, 0, -2), "robot 5");
+		robot5.rotateY(90);
+		Robot robot6 = new Robot(new Vector3d(7, 0, 2), "robot 6");
+		robot6.rotateY(90);
+		
+		add(robot1);
+		add(robot2);
+		add(robot3);
+		add(robot4);
+		add(robot5);
+		add(robot6);
 	}
 }
