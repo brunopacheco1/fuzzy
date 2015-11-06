@@ -54,7 +54,7 @@ DEFUZZIFY motor
 	TERM zero := TRIAN -0.2 0 0.2;
 	TERM positivo_medio := TRIAN 0.1 0.45 0.6;
 	TERM positivo_alto := (0.45,0) (0.85,1) (1,1);
-	RANGE := (-1 .. 1);
+	RANGE := (-0.2 .. 1);
 	
 	METHOD : COG;
 	DEFAULT := 0;
