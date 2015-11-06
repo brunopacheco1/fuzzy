@@ -90,12 +90,10 @@ DEFUZZIFY motor_direito
 END_DEFUZZIFY
 
 RULEBLOCK regras
-	RULE 1 : IF (sensor_frente_esquerdo IS muito_perto) AND (sensor_frente IS muito_perto) AND (sensor_frente_direito IS muito_perto) AND (distancia IS muito_perto) THEN motor_esquerdo IS positivo_medio, motor_direito IS negativo_medio;
-	RULE 2 : IF (sensor_frente_esquerdo IS perto) AND (sensor_frente IS muito_perto) AND (sensor_frente_direito IS longe) AND  (NOT(distancia IS muito_perto)) THEN motor_esquerdo IS positivo_medio, motor_direito IS negativo_medio;
-	RULE 3 : IF (sensor_frente_esquerdo IS perto) AND (sensor_frente IS muito_perto) AND (sensor_frente_direito IS muito_longe) AND  (NOT(distancia IS muito_perto)) THEN motor_esquerdo IS positivo_medio, motor_direito IS negativo_medio;
-	RULE 4 : IF (sensor_frente_esquerdo IS longe) AND (sensor_frente IS muito_perto) AND (sensor_frente_direito IS muito_longe) AND  (NOT(distancia IS muito_perto)) THEN motor_esquerdo IS positivo_medio, motor_direito IS negativo_medio;
-	
-	RULE 5 : IF (NOT(sensor_frente_esquerdo IS muito_perto)) AND (sensor_frente IS muito_perto) AND (sensor_frente_direito IS muito_perto) AND  (NOT(distancia IS muito_perto)) THEN motor_esquerdo IS negativo_medio, motor_direito IS positivo_medio;
+	RULE 1 : IF distancia IS muito_perto THEN motor_esquerdo IS zero, motor_direito IS zero;
+	RULE 2 : IF distancia IS perto THEN motor_esquerdo IS positivo_medio, motor_direito IS positivo_medio;
+	RULE 3 : IF distancia IS longe THEN motor_esquerdo IS positivo_alto, motor_direito IS positivo_alto;
+	RULE 4 : IF distancia IS muito_longe THEN motor_esquerdo IS positivo_alto, motor_direito IS positivo_alto;
 END_RULEBLOCK
 
 END_FUNCTION_BLOCK
